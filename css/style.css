@@ -149,21 +149,75 @@ h2.section-title{font-size:1.875rem;font-weight:700;color:#5A5A5A;text-align:cen
 .step-img-r.visible{animation:revealR .9s ease-out forwards}
 .step-img-l.visible{animation:revealL .9s ease-out forwards}
 
-.fusen-step{position:relative;height:320px}
-.fusen-tape{position:absolute;top:0;left:0;right:0;height:32px;background:#E8DEC8;border-radius:2px 2px 0 0}
+.fusen-step{
+  position:relative;
+  height:320px
+}
+.fusen-tape{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:32px;
+  background:#E8DEC8;
+  border-radius:2px 2px 0 0
+}
 .fusen-body{
-  position:absolute;inset:0;border-radius:2px;padding:3rem;background:#F7F3EC;
+  position:absolute;
+  inset:0;
+  border-radius:2px;
+  padding:0;
+  background:#F7F3EC;
   box-shadow:0 10px 20px rgba(0,0,0,.1),0 6px 6px rgba(0,0,0,.05);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2.25rem;font-weight:700;color:#5A5A5A;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2.25rem;
+  font-weight:700;
+  color:#5A5A5A;
+}
+.fusen-body img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.r1{transform:rotate(1deg)}
-.rm1{transform:rotate(-1deg)}
+.r1{
+  transform:rotate(1deg)
+}
+.rm1{
+  transform:rotate(-1deg)
+    }
 
-footer{background:#5A5A5A;color:#F7F3EC;padding:2rem 1.5rem}
-.footer-links{display:flex;justify-content:center;gap:4rem;margin-bottom:2rem}
-.footer-links a{display:flex;align-items:center}
-.footer-links img{height:40px;object-fit:contain;opacity:.9;transition:opacity .2s}
-.footer-links img:hover{opacity:1}
-.footer-copy{text-align:center;padding-top:2rem;border-top:1px solid #777;font-size:.875rem;color:#F7F3EC}
+footer{
+  background:#5A5A5A;
+  color:#F7F3EC;
+  padding:2rem 1.5rem
+}
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:4rem;
+  margin-bottom:2rem
+}
+.footer-links a{
+  display:flex;
+  align-items:center
+}
+.footer-links img{
+  height:40px;
+  object-fit:contain;
+  opacity:.9;
+  transition:opacity .2s
+}
+.footer-links img:hover{
+  opacity:1
+}
+.footer-copy{
+  text-align:center;
+  padding-top:2rem;
+  border-top:1px solid #777;
+  font-size:.875rem;
+  color:#F7F3EC
+}
