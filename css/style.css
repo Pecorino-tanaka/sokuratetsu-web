@@ -1,11 +1,49 @@
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:sans-serif;background:#f9f9f9;color:#5A5A5A}
-header{position:sticky;top:0;z-index:50;background:#f9f9f8;border-bottom:1px solid #e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-header .inner{max-width:1280px;margin:0 auto;padding:0 1.5rem}
-nav{display:flex;justify-content:space-around;align-items:center;height:64px}
-nav a{color:#5A5A5A;text-decoration:none;font-size:15px;transition:color .2s}
-nav a:hover{color:#888}
-#hero{width:100%;display:flex;justify-content:center;align-items:center;background:#fff;height:calc(100vh - 64px)}
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
+}
+body{
+  font-family:sans-serif;
+  background:#f9f9f9;
+  color:#5A5A5A
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:#f9f9f8;
+  border-bottom:1px solid #e5e7eb;
+  box-shadow:0 1px 3px rgba(0,0,0,.08)
+}
+header .inner{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 1.5rem
+}
+nav{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  height:64px
+}
+nav a{
+  color:#5A5A5A;
+  text-decoration:none;
+  font-size:15px;
+  transition:color .2s
+}
+nav a:hover{
+  color:#888
+}
+#hero{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#fff;
+  height:calc(100vh - 64px)
+}
 #hero svg{height:100%;width:auto;max-width:100%;padding:0 2rem}
 
 @keyframes revealTopRight{
