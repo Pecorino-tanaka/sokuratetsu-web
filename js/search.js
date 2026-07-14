@@ -1,4 +1,22 @@
-const images = [
+// Mobile nav
+function closeMobileNav(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('iconMenu').style.display='block';
+  document.getElementById('iconClose').style.display='none';
+  document.getElementById('menuBtn').setAttribute('aria-expanded','false');
+}
+
+document.getElementById('menuBtn').addEventListener('click',function(){
+  const nav=document.getElementById('mobileNav');
+  const open=nav.classList.toggle('open');
+  document.getElementById('iconMenu').style.display=open?'none':'block';
+  document.getElementById('iconClose').style.display=open?'block':'none';
+  this.setAttribute('aria-expanded',open);
+});
+
+
+// Products image slider
+const images=[
   "images/sokuratetsu-use-image.png",
   "images/sokuratetsu-00.png",
   "images/image-01.png",
@@ -11,54 +29,43 @@ const images = [
   "images/package-images.png"
 ];
 
-let cur = 0;
+const TOTAL=images.length;
+let cur=0;
 
 function updateImg(){
-
-  document.getElementById('mainDisplay').innerHTML =
+  document.getElementById('mainDisplay').innerHTML=
     `<img src="${images[cur]}" alt="ソクラテツ">`;
 
-  document.querySelectorAll('.thumb-btn').forEach((b,i)=>{
-    b.classList.toggle('active', i === cur);
-  });
+  document.querySelectorAll('.thumb-btn')
+    .forEach((b,i)=>b.classList.toggle('active',i===cur));
 }
-
 
 function prevImg(){
-  cur = cur === 0 ? images.length - 1 : cur - 1;
+  cur = cur===0 ? TOTAL-1 : cur-1;
   updateImg();
 }
-
 
 function nextImg(){
-  cur = cur === images.length - 1 ? 0 : cur + 1;
+  cur = cur===TOTAL-1 ? 0 : cur+1;
   updateImg();
 }
 
+const thumbs=document.getElementById('thumbs');
 
-// サムネイル作成
-const thumbs = document.getElementById('thumbs');
+for(let r=0;r<2;r++){
+  const row=document.createElement('div');
+  row.className='thumb-row';
 
-for(let r = 0; r < 2; r++){
+  for(let c=0;c<5;c++){
+    const i=r*5+c;
 
-  const row = document.createElement('div');
-  row.className = 'thumb-row';
+    const b=document.createElement('button');
+    b.className='thumb-btn'+(i===0?' active':'');
 
-  for(let c = 0; c < 5; c++){
-
-    const i = r * 5 + c;
-
-    const b = document.createElement('button');
-
-    b.className = 'thumb-btn' + (i === 0 ? ' active' : '');
-
-    b.innerHTML =
+    b.innerHTML=
       `<img class="thumb-inner" src="${images[i]}" alt="">`;
 
-    b.onclick = ()=>{
-      cur = i;
-      updateImg();
-    };
+    b.onclick=(()=>{const idx=i;return()=>{cur=idx;updateImg();}})();
 
     row.appendChild(b);
   }
@@ -66,20 +73,18 @@ for(let r = 0; r < 2; r++){
   thumbs.appendChild(row);
 }
 
-
-// 初期表示
 updateImg();
 
 
-// スクロールアニメーション
+// Step scroll animations
 const stepImgs=document.querySelectorAll('.step-img-r,.step-img-l');
 
 document.querySelectorAll('.step-text').forEach((el,i)=>{
   new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
-      if(e.isIntersecting&&stepImgs[i]){
+      if(e.isIntersecting && stepImgs[i]){
         stepImgs[i].classList.add('visible');
       }
     });
-  },{threshold:0.5}).observe(el);
+  },{threshold:0.3}).observe(el);
 });
