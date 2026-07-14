@@ -169,7 +169,10 @@ h2.section-title{font-size:1.875rem;font-weight:700;color:#5A5A5A;text-align:cen
 @media(max-width:768px){.step{grid-template-columns:1fr}}
 
 .step h3{font-size:1.5rem;font-weight:600;color:#5A5A5A}
-.step-img-wrap{width:500px}
+.step-img-wrap{
+    width:100%;
+    max-width:500px;
+}
 .step-img-wrap.right{justify-self:end}
 @media(max-width:768px){.step-img-wrap{width:100%}}
 
