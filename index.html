@@ -1,1 +1,372 @@
-<!DOCTYPE html> <html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>ザ・あやときや｜店舗管理システム</title> <style> *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:#f4f7fb;color:#263238} .app{width:100vw;height:100vh;display:flex;overflow:hidden} .sidebar{width:220px;background:#fff;border-right:1px solid #e4e9ef;padding:18px 14px;display:flex;flex-direction:column} .brand{font-weight:800;font-size:18px;color:#1976d2;margin:2px 10px 18px} .brand small{display:block;color:#8a98a8;font-size:10px;margin-top:3px;font-weight:500} .nav{display:flex;flex-direction:column;gap:5px} .nav button{border:0;background:transparent;text-align:left;padding:11px 12px;border-radius:9px;color:#526170;font-size:13px;cursor:pointer} .nav button:hover,.nav button.active{background:#eaf3ff;color:#1976d2;font-weight:700} .store{margin-top:auto;background:#f7f9fc;border-radius:10px;padding:11px;font-size:11px;color:#6d7b88} .store b{display:block;color:#37474f;margin-bottom:4px} main{flex:1;min-width:0;padding:18px 22px;overflow:hidden} .top{height:48px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px} .title{font-size:22px;font-weight:800} .sub{font-size:11px;color:#8a98a8;margin-top:2px} .user{display:flex;align-items:center;gap:9px;font-size:12px} .avatar{width:30px;height:30px;border-radius:50%;background:#dbeafe;color:#1976d2;display:grid;place-items:center;font-weight:700} .screen{height:calc(100vh - 76px);min-height:0} .page{display:none;height:100%} .page.active{display:block} .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px} .card{background:#fff;border:1px solid #e8edf3;border-radius:12px;padding:14px} .label{font-size:11px;color:#7c8a97} .value{font-size:24px;font-weight:800;margin-top:5px} .note{font-size:10px;color:#7c8a97;margin-top:4px} .up{color:#2e7d32}.warn{color:#ef8b00}.blue{color:#1976d2} .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;height:calc(100% - 112px)} .panel{background:#fff;border:1px solid #e8edf3;border-radius:12px;padding:14px;min-height:0} .panel h3{font-size:14px;margin:0 0 12px} .toolbar{display:flex;gap:7px;align-items:center;margin-bottom:10px;flex-wrap:wrap} input,select{border:1px solid #dbe2e9;border-radius:7px;padding:8px 10px;font-size:11px;background:#fff;color:#34424e} .btn{border:0;border-radius:7px;padding:8px 12px;font-size:11px;cursor:pointer;background:#1976d2;color:#fff} .btn.light{background:#eef4f9;color:#48606f}.btn.green{background:#43a047} .periods{display:flex;gap:5px}.periods button{border:1px solid #dbe2e9;background:#fff;padding:7px 10px;border-radius:7px;font-size:11px}.periods button.sel{background:#1976d2;color:#fff;border-color:#1976d2} table{width:100%;border-collapse:collapse;font-size:11px} th{background:#f7f9fb;color:#778592;font-weight:700;text-align:left} th,td{padding:9px 8px;border-bottom:1px solid #edf1f4} tr:last-child td{border-bottom:0} .badge{display:inline-block;padding:4px 7px;border-radius:12px;font-size:9px;font-weight:700} .b-blue{background:#e8f2ff;color:#1976d2}.b-green{background:#e9f7ed;color:#2e7d32}.b-orange{background:#fff3df;color:#c97900}.b-gray{background:#eef1f4;color:#66737e} .bar{height:9px;background:#edf1f4;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:#64a9ed;border-radius:10px} .chart{display:flex;align-items:flex-end;gap:12px;height:180px;padding:10px 8px 24px} .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:5px} .col i{width:70%;background:#64a9ed;border-radius:5px 5px 0 0;min-height:4px} .col span{font-size:9px;color:#8996a1} .col em{font-size:9px;color:#66737e;font-style:normal} .detail{display:grid;grid-template-columns:1fr 1fr;gap:8px} .kv{background:#f8fafc;border-radius:8px;padding:9px}.kv small{display:block;color:#8a98a8;font-size:9px}.kv b{font-size:11px} .notice{padding:9px 10px;border-radius:8px;background:#f5f9ff;border-left:3px solid #64a9ed;font-size:10px;margin-bottom:7px} .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px} .action{border:1px solid #e4eaf0;background:#fff;border-radius:9px;padding:11px;text-align:left;cursor:pointer}.action b{font-size:11px;display:block;margin-bottom:3px}.action span{font-size:9px;color:#87939d} .formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.field label{display:block;font-size:10px;color:#7c8995;margin-bottom:4px} .field input,.field select{width:100%} .full{grid-column:1/-1} .toggle{display:flex;align-items:center;justify-content:space-between;padding:10px;background:#f8fafc;border-radius:8px;font-size:11px} .switch{width:34px;height:19px;border-radius:20px;background:#1976d2;position:relative}.switch:after{content:"";width:15px;height:15px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px} .muted{color:#87939d;font-size:10px} .footerline{display:flex;justify-content:space-between;align-items:center;margin-top:8px} @media(max-width:900px){.sidebar{width:175px}.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.screen{overflow:auto}} </style> </head> <body> <div class="app"> <aside class="sidebar"> <div class="brand">ザ・あやときや<small>店舗管理システム</small></div> <div class="nav"> <button class="active" data-page="dashboard">▣ ダッシュボード</button> <button data-page="sales">▤ 売上管理</button> <button data-page="customers">♙ 顧客管理</button> <button data-page="products">□ 商品管理</button> <button data-page="stores">⌂ 店舗管理</button> <button data-page="buyer">◎ バイヤー</button> <button data-page="orders">↗ 受注・発送管理</button> <button data-page="benefits">☆ 顧客特典・おすすめ</button> <button data-page="settings">⚙ システム設定</button> </div> <div class="store"><b>綾町本店</b>店舗ID：AY-001<br>最終同期：2026/09/10 21:05</div> </aside> <main> <div class="top"> <div><div class="title" id="pageTitle">ダッシュボード</div><div class="sub">店舗の状況をひと目で確認できます</div></div> <div class="user"><span>店舗管理者</span><div class="avatar">店</div></div> </div> <div class="screen"> <!-- Dashboard --> <section class="page active" id="dashboard"> <div class="cards"> <div class="card"><div class="label">本日の売上</div><div class="value blue">¥128,400</div><div class="note up">前日比 +8.4%</div></div> <div class="card"><div class="label">本日の注文</div><div class="value">36件</div><div class="note">発送待ち 8件</div></div> <div class="card"><div class="label">在庫不足商品</div><div class="value warn">7点</div><div class="note">入庫予定 3点</div></div> <div class="card"><div class="label">会員顧客</div><div class="value">1,284人</div><div class="note">今月 +42人</div></div> </div> <div class="grid2"> <div class="panel"> <h3>売上推移（今週）</h3> <div class="chart"> <div class="col"><em>¥92k</em><i style="height:52%"></i><span>月</span></div> <div class="col"><em>¥118k</em><i style="height:66%"></i><span>火</span></div> <div class="col"><em>¥105k</em><i style="height:59%"></i><span>水</span></div> <div class="col"><em>¥136k</em><i style="height:76%"></i><span>木</span></div> <div class="col"><em>¥128k</em><i style="height:72%"></i><span>金</span></div> </div> <div class="footerline"><span class="muted">EC＋店舗を合算</span><button class="btn light" onclick="show('sales')">売上を詳しく見る</button></div> </div> <div class="panel"> <h3>今日の対応</h3> <div class="notice"><b>発送待ち 8件</b><br>本日15時までの発送対象があります。</div> <div class="notice"><b>在庫不足 7商品</b><br>人気商品のうち3商品が残り5個以下です。</div> <div class="notice"><b>おすすめ候補 12人</b><br>購入履歴から案内候補を抽出しています。</div> <h3 style="margin-top:14px">クイック操作</h3> <div class="actions"> <button class="action" onclick="show('customers')"><b>顧客を検索</b><span>ID・購入日など</span></button> <button class="action" onclick="show('products')"><b>商品を検索</b><span>在庫・入庫予定</span></button> <button class="action" onclick="show('orders')"><b>発送を確認</b><span>発送状況を更新</span></button> </div> </div> </div> </section> <!-- Sales --> <section class="page" id="sales"> <div class="panel" style="height:100%"> <div class="toolbar"><div class="periods"><button class="sel">日</button><button>月</button><button>年</button></div><input type="date" value="2026-09-10"><select><option>全店舗</option><option>綾町本店</option><option>宮崎店</option></select><button class="btn">集計</button></div> <div class="cards"> <div class="card"><div class="label">売上</div><div class="value blue">¥128,400</div></div><div class="card"><div class="label">注文数</div><div class="value">36件</div></div><div class="card"><div class="label">平均購入額</div><div class="value">¥3,567</div></div><div class="card"><div class="label">EC売上比率</div><div class="value">42%</div></div> </div> <h3>商品カテゴリ別売上</h3> <table><tr><th>カテゴリ</th><th>売上</th><th>構成比</th><th>注文数</th></tr> <tr><td>生活雑貨</td><td>¥42,800</td><td>33.3%</td><td>12</td></tr> <tr><td>インテリア雑貨</td><td>¥31,600</td><td>24.6%</td><td>7</td></tr> <tr><td>お菓子</td><td>¥26,000</td><td>20.2%</td><td>10</td></tr> <tr><td>オリジナル商品</td><td>¥28,000</td><td>21.8%</td><td>7</td></table> </div> </section> <!-- Customers --> <section class="page" id="customers"> <div class="grid2" style="height:100%"> <div class="panel"> <h3>顧客検索</h3> <div class="toolbar"><input placeholder="顧客ID・氏名・電話番号" style="flex:1"><input type="date"><button class="btn">検索</button></div> <table><tr><th>顧客ID</th><th>氏名</th><th>購入日</th><th>グレード</th></tr> <tr><td>C-1024</td><td>山田 花子</td><td>2026/09/10</td><td><span class="badge b-blue">ゴールド</span></td></tr> <tr><td>C-1008</td><td>佐藤 太郎</td><td>2026/09/09</td><td><span class="badge b-green">シルバー</span></td></tr> <tr><td>C-0982</td><td>田中 美咲</td><td>2026/09/08</td><td><span class="badge b-orange">一般</span></td></tr> <tr><td>C-0967</td><td>鈴木 一郎</td><td>2026/09/07</td><td><span class="badge b-blue">ゴールド</span></td></tr></table> </div> <div class="panel"> <h3>顧客詳細　C-1024</h3> <div class="detail"> <div class="kv"><small>氏名</small><b>山田 花子</b></div><div class="kv"><small>会員グレード</small><b class="blue">ゴールド</b></div> <div class="kv"><small>累計購入額</small><b>¥84,600</b></div><div class="kv"><small>購入回数</small><b>18回</b></div> </div> <h3 style="margin-top:14px">購入・発送履歴</h3> <table><tr><th>購入日</th><th>商品</th><th>金額</th><th>発送日</th></tr> <tr><td>9/10</td><td>綾町オリジナル茶</td><td>¥2,400</td><td>未発送</td></tr> <tr><td>8/22</td><td>木製小物セット</td><td>¥4,800</td><td>8/23</td></tr> <tr><td>7/15</td><td>焼き菓子セット</td><td>¥3,200</td><td>7/16</td></tr></table> <div class="footerline"><button class="btn light">購入履歴を全件表示</button><button class="btn">おすすめを確認</button></div> </div> </div> </section> <!-- Products --> <section class="page" id="products"> <div class="panel" style="height:100%"> <div class="toolbar"><input placeholder="商品ID・商品名" style="width:220px"><select><option>全カテゴリ</option><option>生活雑貨</option><option>お菓子</option><option>オリジナル商品</option></select><select><option>全在庫</option><option>5個以下</option><option>在庫なし</option></select><button class="btn">絞り込み</button><button class="btn green">＋ 商品登録</button></div> <table><tr><th>商品ID</th><th>商品名</th><th>在庫</th><th>入庫日</th><th>入庫予定日</th><th>販売状況</th></tr> <tr><td>P-0012</td><td>綾町オリジナル茶</td><td><b class="warn">4</b></td><td>9/01</td><td>9/12</td><td><span class="badge b-orange">残少</span></td></tr> <tr><td>P-0034</td><td>木製小物セット</td><td>28</td><td>8/28</td><td>—</td><td><span class="badge b-green">販売中</span></td></tr> <tr><td>P-0041</td><td>焼き菓子セット</td><td>0</td><td>9/02</td><td>9/11</td><td><span class="badge b-gray">入庫待ち</span></td></tr> <tr><td>P-0068</td><td>南九州インテリア雑貨</td><td>16</td><td>8/20</td><td>—</td><td><span class="badge b-green">販売中</span></td></tr></table> </div> </section> <!-- Stores --> <section class="page" id="stores"> <div class="grid2" style="height:100%"> <div class="panel"><h3>店舗一覧</h3><table><tr><th>店舗ID</th><th>店舗名</th><th>地域</th><th>状態</th></tr> <tr><td>AY-001</td><td>綾町本店</td><td>宮崎県綾町</td><td><span class="badge b-green">稼働中</span></td></tr> <tr><td>MY-002</td><td>宮崎店</td><td>宮崎市</td><td><span class="badge b-green">稼働中</span></td></tr> <tr><td>EC-001</td><td>ECサイト</td><td>オンライン</td><td><span class="badge b-blue">連携中</span></td></tr></table><button class="btn green" style="margin-top:12px">＋ 店舗を登録</button></div> <div class="panel"><h3>店舗登録・編集</h3><div class="formgrid"> <div class="field"><label>店舗ID</label><input value="AY-001"></div><div class="field"><label>店舗名</label><input value="綾町本店"></div><div class="field"><label>地域</label><input value="宮崎県綾町"></div> <div class="field"><label>電話番号</label><input value="0985-00-0000"></div><div class="field"><label>担当者</label><input value="綾町本店 店長"></div><div class="field"><label>営業時間</label><input value="10:00～18:00"></div> <div class="field full"><label>取扱カテゴリ</label><input value="生活雑貨、インテリア雑貨、お菓子、オリジナル商品"></div> </div><div class="footerline"><span class="muted">店舗情報はEC側の店舗情報にも反映</span><button class="btn">保存</button></div></div> </div> </section> <!-- Buyer --> <section class="page" id="buyer"> <div class="grid2" style="height:100%"> <div class="panel"><h3>バイヤー管理</h3><div class="toolbar"><select><option>海外向け</option><option>国内仕入れ</option></select><select><option>全カテゴリ</option><option>食品</option><option>雑貨</option></select><button class="btn">検索</button></div> <table><tr><th>商品</th><th>仕入先</th><th>原価</th><th>在庫</th><th>海外販売</th></tr> <tr><td>綾町オリジナル茶</td><td>綾町農家</td><td>¥800</td><td>4</td><td><span class="badge b-green">対象</span></td></tr> <tr><td>木製小物セット</td><td>県内工房</td><td>¥1,600</td><td>28</td><td><span class="badge b-green">対象</span></td></tr> <tr><td>焼き菓子セット</td><td>綾町菓子店</td><td>¥1,100</td><td>0</td><td><span class="badge b-orange">確認中</span></td></tr></table> </div> <div class="panel"><h3>海外販売チェック</h3><div class="notice"><b>海外向け候補：12商品</b><br>商品説明・価格・配送条件を確認してください。</div> <div class="kv" style="margin-bottom:8px"><small>翻訳</small><b>商品名・説明文を英語化</b><div class="bar" style="margin-top:7px"><i style="width:75%"></i></div></div> <div class="kv" style="margin-bottom:8px"><small>海外配送</small><b>配送対象国・送料を設定</b><div class="bar" style="margin-top:7px"><i style="width:55%"></i></div></div> <button class="btn">候補商品を確認</button></div> </div> </section> <!-- Orders --> <section class="page" id="orders"> <div class="panel" style="height:100%"> <div class="toolbar"><select><option>全ステータス</option><option>注文受付</option><option>発送待ち</option><option>発送済み</option></select><input placeholder="注文ID・顧客ID"><input type="date"><button class="btn">検索</button></div> <table><tr><th>注文ID</th><th>顧客ID</th><th>注文日</th><th>商品</th><th>金額</th><th>発送状況</th><th>操作</th></tr> <tr><td>O-20260910-18</td><td>C-1024</td><td>9/10</td><td>綾町オリジナル茶 他2点</td><td>¥5,800</td><td><span class="badge b-orange">発送待ち</span></td><td><button class="btn light">詳細</button></td></tr> <tr><td>O-20260910-17</td><td>C-1008</td><td>9/10</td><td>木製小物セット</td><td>¥4,800</td><td><span class="badge b-green">発送済み</span></td><td><button class="btn light">詳細</button></td></tr> <tr><td>O-20260909-31</td><td>C-0982</td><td>9/09</td><td>焼き菓子セット</td><td>¥3,200</td><td><span class="badge b-green">発送済み</span></td><td><button class="btn light">詳細</button></td></tr></table> </div> </section> <!-- Benefits --> <section class="page" id="benefits"> <div class="grid2" style="height:100%"> <div class="panel"><h3>顧客特典メニュー</h3> <div class="action" style="margin-bottom:8px"><b>ゴールド会員限定クーポン</b><span>累計購入額が5万円以上の顧客に10%OFF</span></div> <div class="action" style="margin-bottom:8px"><b>誕生月おすすめ</b><span>誕生月の顧客へ対象商品を案内</span></div> <div class="action"><b>購入商品に合わせたおすすめ</b><span>過去の購入履歴から関連商品を自動表示</span></div> </div> <div class="panel"><h3>おすすめ配信候補</h3><table><tr><th>顧客</th><th>購入傾向</th><th>おすすめ</th><th>配信</th></tr> <tr><td>C-1024</td><td>お茶・食品</td><td>焼き菓子</td><td><button class="btn">案内する</button></td></tr> <tr><td>C-1008</td><td>木製雑貨</td><td>新作小物</td><td><button class="btn">案内する</button></td></tr> <tr><td>C-0982</td><td>お菓子</td><td>季節限定品</td><td><button class="btn">案内する</button></td></tr></table> <div class="notice" style="margin-top:12px">※ 顧客側サイトと連携すると、店舗側で設定したおすすめ・特典を顧客画面に表示できます。</div> </div> </div> </section> <!-- Settings --> <section class="page" id="settings"> <div class="grid2" style="height:100%"> <div class="panel"><h3>ECサイト連携</h3> <div class="toggle"><span><b>商品情報をECへ自動反映</b><br><span class="muted">商品名・価格・在庫・画像</span></span><i class="switch"></i></div> <div class="toggle" style="margin-top:8px"><span><b>注文情報を店舗側へ自動取得</b><br><span class="muted">顧客の注文・配送先・決済状態</span></span><i class="switch"></i></div> <div class="toggle" style="margin-top:8px"><span><b>おすすめ情報を顧客サイトへ反映</b><br><span class="muted">購入履歴をもとにした商品提案</span></span><i class="switch"></i></div> </div> <div class="panel"><h3>システム基本設定</h3> <div class="formgrid"><div class="field"><label>在庫警告ライン</label><input value="5"></div><div class="field"><label>会員ランク判定</label><select><option>購入金額</option><option>購入回数</option></select></div><div class="field"><label>自動同期</label><select><option>5分ごと</option><option>30分ごと</option></select></div></div> <div class="notice" style="margin-top:14px"><b>設計上のポイント</b><br>店舗管理システムと顧客向けECサイトで同じ商品・顧客・注文データを共有する構成を想定しています。</div> <button class="btn">設定を保存</button> </div> </div> </section> </div> </main> </div> <script> const titles={ dashboard:"ダッシュボード",sales:"売上管理",customers:"顧客管理",products:"商品管理", stores:"店舗管理",buyer:"バイヤー",orders:"受注・発送管理",benefits:"顧客特典・おすすめ",settings:"システム設定" }; function show(id){ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); document.getElementById(id).classList.add("active"); document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id)); document.getElementById("pageTitle").textContent=titles[id]; } document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page))); document.querySelectorAll(".periods button").forEach(b=>b.addEventListener("click",()=>{ document.querySelectorAll(".periods button").forEach(x=>x.classList.remove("sel"));b.classList.add("sel"); })); </script> </body> </html> 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECシステム（商品詳細〜決済フロー）</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 30px 0;
+      background-color: #f4f4f4;
+      margin: 0;
+    }
+    .card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+    .page { display: none; }
+    .active { display: block; }
+
+    /* 各種ボタン */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn-primary { background-color: #ff9900; color: #fff; }
+    .btn-primary:hover { background-color: #e68a00; }
+    .btn-secondary { background-color: #6c757d; color: #fff; }
+    .btn-action { background-color: #007bff; color: #fff; }
+    .btn-add { background-color: #28a745; color: #fff; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; }
+
+    /* 商品詳細 */
+    .product-img {
+      width: 100%;
+      height: 180px;
+      background-color: #f0f0f0;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    .product-description {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #495057;
+      line-height: 1.5;
+    }
+    .quantity-control { display: flex; align-items: center; gap: 12px; margin: 10px 0 20px; }
+    .btn-qty { width: 36px; height: 36px; font-size: 18px; border: 1px solid #ccc; background: #fff; border-radius: 4px; padding: 0; }
+
+    /* カート画面 */
+    .cart-list { list-style: none; padding: 0; margin: 0 0 16px 0; border-bottom: 1px solid #eee; }
+    .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid #eee; font-size: 14px; }
+    .total-price { font-size: 18px; font-weight: bold; text-align: right; margin: 15px 0; }
+
+    /* おすすめセクション */
+    .recommend-section {
+      border-top: 2px dashed #ddd;
+      margin: 20px -24px -24px -24px;
+      padding: 16px 24px 24px 24px;
+      background-color: #fafafa;
+      border-radius: 0 0 8px 8px;
+    }
+    .recommend-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 8px; }
+
+    /* 決済画面（アコーディオン） */
+    .pay-option { margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
+    .pay-btn { background-color: #f8f9fa; color: #333; text-align: left; margin: 0; border-radius: 0; }
+    .pay-btn:hover { background-color: #e9ecef; }
+    .pay-banner { display: none; padding: 15px; background-color: #f1f8ff; border-top: 1px solid #ddd; font-size: 13px; line-height: 1.6; }
+    .pay-banner label { display: block; margin-bottom: 5px; }
+
+    /* 最終確認画面 */
+    .confirm-box { background: #f8f9fa; border: 1px solid #e9ecef; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
+    .confirm-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- 【ページ1】商品詳細画面 -->
+  <div id="page-detail" class="page active">
+    <div class="product-img">📦</div>
+    <h1 style="font-size: 20px; margin: 0 0 8px;">サンプル商品 A</h1>
+    
+    <div class="product-description">
+      この商品は高品質な素材を使用して作られたこだわりのアイテムです。<br>
+      ・原産国: 日本 (Made in Japan)<br>
+      ・素材: 綿 100%
+    </div>
+
+    <div style="font-size: 22px; font-weight: bold; color: #e44d26;">¥1,200</div>
+    <div style="font-size: 14px; color: #666; margin-bottom: 15px;">📦 在庫数: 10点</div>
+
+    <label style="font-size: 14px;">🔢 購入個数</label>
+    <div class="quantity-control">
+      <button class="btn-qty" onclick="changeQuantity(-1)">−</button>
+      <span id="qty-display" style="font-size: 18px; font-weight: bold; width: 30px; text-align: center;">1</span>
+      <button class="btn-qty" onclick="changeQuantity(1)">＋</button>
+    </div>
+
+    <button class="btn-primary" onclick="addToCartAndShowAlert()">カートに追加する</button>
+    <button class="btn-action" onclick="showPage('page-cart')">🛒 カートを見る</button>
+  </div>
+
+
+  <!-- 【ページ2】ショッピングカート画面 -->
+  <div id="page-cart" class="page">
+    <h2>🛒 ショッピングカート</h2>
+    <ul id="cart-list" class="cart-list"></ul>
+    
+    <div class="total-price">
+      合計金額: ¥<span id="cart-total">0</span>
+    </div>
+
+    <!-- 合計とおすすめの間に配置した「決済に進む」ボタン -->
+    <button class="btn-action" onclick="showPage('page-payment')">💳 決済に進む</button>
+
+    <div class="recommend-section">
+      <h3 style="font-size: 15px; margin: 0 0 10px;">💡 あわせて買うといいおすすめ</h3>
+      <div class="recommend-item">
+        <div>
+          <strong>専用お手入れクロス</strong><br>
+          <span style="color: #e44d26;">¥500</span>
+        </div>
+        <button class="btn-add" onclick="addRecommend('専用お手入れクロス', 500)">追加</button>
+      </div>
+      <div class="recommend-item">
+        <div>
+          <strong>保護スプレー 100ml</strong><br>
+          <span style="color: #e44d26;">¥850</span>
+        </div>
+        <button class="btn-add" onclick="addRecommend('保護スプレー 100ml', 850)">追加</button>
+      </div>
+    </div>
+
+    <button class="btn-secondary" onclick="showPage('page-detail')" style="margin-top: 20px;">商品ページに戻る</button>
+  </div>
+
+
+  <!-- 【ページ3】決済画面 -->
+  <div id="page-payment" class="page">
+    <h2>💳 決済方法の選択</h2>
+
+    <!-- クレジット -->
+    <div class="pay-option">
+      <button class="pay-btn" onclick="toggleBanner('banner-credit', 'クレジットカード')">💳 クレジットカード</button>
+      <div id="banner-credit" class="pay-banner">
+        <strong>ご登録クレジットカードの確認</strong><br>
+        カード番号: **** **** **** 1234<br>
+        有効期限: 12/28<br>
+        <span style="color: #28a745;">✔ このカードでお支払いを進めます</span>
+      </div>
+    </div>
+
+    <!-- PayPay -->
+    <div class="pay-option">
+      <button class="pay-btn" onclick="toggleBanner('banner-paypay', 'PayPay')">📱 PayPay</button>
+      <div id="banner-paypay" class="pay-banner">
+        注文完了後、PayPayアプリ（または決済画面）へ自動で遷移します。
+      </div>
+    </div>
+
+    <!-- コンビニ -->
+    <div class="pay-option">
+      <button class="pay-btn" onclick="toggleBanner('banner-convenience', 'コンビニ決済')">🏪 コンビニ決済</button>
+      <div id="banner-convenience" class="pay-banner">
+        お支払いするコンビニを選択してください：<br><br>
+        <label><input type="radio" name="convenience-store" value="セブンイレブン" checked> セブンイレブン</label>
+        <label><input type="radio" name="convenience-store" value="ローソン"> ローソン</label>
+        <label><input type="radio" name="convenience-store" value="ファミリーマート"> ファミリーマート</label>
+      </div>
+    </div>
+
+    <!-- 代引き -->
+    <div class="pay-option">
+      <button class="pay-btn" onclick="toggleBanner('banner-cod', '代金引換')">🚚 代金引換（代引き）</button>
+      <div id="banner-cod" class="pay-banner">
+        商品受け取り時に配達員へ現金でお支払いください。<br>
+        ※別途代引き手数料（¥330）がかかります。
+      </div>
+    </div>
+
+    <button class="btn-action" onclick="goToConfirmPage()" style="margin-top: 20px;">最終確認に進む</button>
+    <button class="btn-secondary" onclick="showPage('page-cart')">カートに戻る</button>
+  </div>
+
+
+  <!-- 【ページ4】最終確認画面 -->
+  <div id="page-confirm" class="page">
+    <h2>📋 最終確認</h2>
+    
+    <div class="confirm-box">
+      <strong>注文商品一覧</strong>
+      <div id="confirm-items" style="margin-top: 8px;"></div>
+    </div>
+
+    <div class="confirm-box">
+      <div class="confirm-row">
+        <span>お支払い方法:</span>
+        <strong id="confirm-payment-method">-</strong>
+      </div>
+      <div id="confirm-convenience-row" class="confirm-row" style="display: none;">
+        <span>選択コンビニ:</span>
+        <strong id="confirm-convenience-store">-</strong>
+      </div>
+      <hr style="border: 0; border-top: 1px solid #ccc; margin: 8px 0;">
+      <div class="confirm-row" style="font-size: 16px;">
+        <span>最終お支払い合計:</span>
+        <strong style="color: #e44d26;">¥<span id="confirm-total">0</span></strong>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="submitOrder()">購入を確定する</button>
+    <button class="btn-secondary" onclick="showPage('page-payment')">決済方法を選び直す</button>
+  </div>
+
+</div>
+
+<script>
+  let currentQty = 1;
+  let cart = [];
+  let selectedPaymentMethod = '';
+
+  // ページ切り替え
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+  }
+
+  // 個数変更
+  function changeQuantity(amount) {
+    if (currentQty + amount >= 1 && currentQty + amount <= 10) {
+      currentQty += amount;
+      document.getElementById('qty-display').textContent = currentQty;
+    }
+  }
+
+  // 商品詳細からのカート追加
+  function addToCartAndShowAlert() {
+    const existing = cart.find(item => item.name === 'サンプル商品 A');
+    if (existing) {
+      existing.qty += currentQty;
+    } else {
+      cart.push({ name: 'サンプル商品 A', price: 1200, qty: currentQty });
+    }
+    renderCart();
+    alert('商品をカートに追加しました！');
+  }
+
+  // おすすめ商品のカート追加
+  function addRecommend(name, price) {
+    const existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ name, price, qty: 1 });
+    }
+    renderCart();
+  }
+
+  // カート描画
+  function renderCart() {
+    const cartList = document.getElementById('cart-list');
+    const totalEl = document.getElementById('cart-total');
+    cartList.innerHTML = '';
+
+    if (cart.length === 0) {
+      cartList.innerHTML = '<li style="padding: 15px 0; text-align: center; color: #888;">カートは空です</li>';
+      totalEl.textContent = '0';
+      return;
+    }
+
+    let total = 0;
+    cart.forEach(item => {
+      const subtotal = item.price * item.qty;
+      total += subtotal;
+      cartList.innerHTML += `
+        <li class="cart-item">
+          <span>${item.name} × ${item.qty}</span>
+          <span>¥${subtotal.toLocaleString()}</span>
+        </li>
+      `;
+    });
+    totalEl.textContent = total.toLocaleString();
+  }
+
+  // 決済方法バナーの開閉（アコーディオン）
+  function toggleBanner(bannerId, methodName) {
+    document.querySelectorAll('.pay-banner').forEach(b => b.style.display = 'none');
+    document.getElementById(bannerId).style.display = 'block';
+    selectedPaymentMethod = methodName;
+  }
+
+  // 最終確認画面へ遷移
+  function goToConfirmPage() {
+    if (!selectedPaymentMethod) {
+      alert('お支払い方法を選択してください。');
+      return;
+    }
+    if (cart.length === 0) {
+      alert('カートに商品が入っていません。');
+      return;
+    }
+
+    // 選択された内容のセット
+    const confirmItems = document.getElementById('confirm-items');
+    confirmItems.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+      const subtotal = item.price * item.qty;
+      total += subtotal;
+      confirmItems.innerHTML += `
+        <div class="confirm-row">
+          <span>${item.name} × ${item.qty}</span>
+          <span>¥${subtotal.toLocaleString()}</span>
+        </div>
+      `;
+    });
+
+    document.getElementById('confirm-payment-method').textContent = selectedPaymentMethod;
+    document.getElementById('confirm-total').textContent = total.toLocaleString();
+
+    // コンビニの表示切り替え
+    const cvsRow = document.getElementById('confirm-convenience-row');
+    if (selectedPaymentMethod === 'コンビニ決済') {
+      const selectedCvs = document.querySelector('input[name="convenience-store"]:checked').value;
+      document.getElementById('confirm-convenience-store').textContent = selectedCvs;
+      cvsRow.style.display = 'flex';
+    } else {
+      cvsRow.style.display = 'none';
+    }
+
+    showPage('page-confirm');
+  }
+
+  // 購入確定処理
+  function submitOrder() {
+    alert('ご注文ありがとうございました！購入が確定しました。');
+    cart = [];
+    renderCart();
+    showPage('page-detail');
+  }
+
+  // 初期化
+  renderCart();
+</script>
+
+</body>
+</html>
+
