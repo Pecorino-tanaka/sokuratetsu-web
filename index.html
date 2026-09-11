@@ -1,372 +1,922 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ECシステム（商品詳細〜決済フロー）</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      padding: 30px 0;
-      background-color: #f4f4f4;
-      margin: 0;
-    }
-    .card {
-      background: #fff;
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-      box-sizing: border-box;
-    }
-    .page { display: none; }
-    .active { display: block; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    /* 各種ボタン */
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 4px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
+<title>綾時屋サポート</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Yu Gothic", "Meiryo", sans-serif;
+}
+
+
+/* =========================
+   チャットボタン
+========================= */
+
+.chat-button {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+
+    width: 65px;
+    height: 65px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #526f56;
+    color: white;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+    z-index: 9999;
+
+    transition: 0.2s;
+}
+
+.chat-button:hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   チャット画面
+========================= */
+
+.chat-window {
+
+    position: fixed;
+
+    right: 25px;
+    bottom: 100px;
+
+    width: 360px;
+    height: 520px;
+
+    background: white;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 25px rgba(0,0,0,0.25);
+
+    overflow: hidden;
+
+    display: none;
+
+    flex-direction: column;
+
+    z-index: 9998;
+}
+
+
+/* =========================
+   ヘッダー
+========================= */
+
+.chat-header {
+
+    background: #526f56;
+
+    color: white;
+
+    padding: 16px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.chat-header-title {
+
+    font-weight: bold;
+
+    font-size: 16px;
+}
+
+.chat-close {
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   メッセージエリア
+========================= */
+
+.chat-messages {
+
+    flex: 1;
+
+    padding: 15px;
+
+    overflow-y: auto;
+
+    background: #f7f7f5;
+}
+
+
+/* =========================
+   メッセージ
+========================= */
+
+.message {
+
+    max-width: 82%;
+
+    padding: 10px 13px;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.bot-message {
+
+    background: white;
+
+    border: 1px solid #e1e1e1;
+
+    margin-right: auto;
+}
+
+.user-message {
+
+    background: #526f56;
+
+    color: white;
+
+    margin-left: auto;
+}
+
+
+/* =========================
+   選択ボタン
+========================= */
+
+.quick-buttons {
+
+    padding: 10px;
+
+    background: white;
+
+    border-top: 1px solid #ddd;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.quick-buttons button {
+
+    background: #f1f3ef;
+
+    border: 1px solid #d6dcd4;
+
+    border-radius: 20px;
+
+    padding: 7px 10px;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    color: #405544;
+}
+
+.quick-buttons button:hover {
+
+    background: #e2e9e1;
+}
+
+
+/* =========================
+   入力欄
+========================= */
+
+.chat-input-area {
+
+    display: flex;
+
+    border-top: 1px solid #ddd;
+
+    background: white;
+}
+
+.chat-input {
+
+    flex: 1;
+
+    border: none;
+
+    padding: 13px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.send-button {
+
+    width: 65px;
+
+    border: none;
+
+    background: #526f56;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.send-button:hover {
+
+    background: #405744;
+}
+
+
+/* =========================
+   スマホ対応
+========================= */
+
+@media (max-width: 600px) {
+
+    .chat-window {
+
+        right: 10px;
+        bottom: 85px;
+
+        width: calc(100% - 20px);
+
+        height: 70vh;
     }
-    .btn-primary { background-color: #ff9900; color: #fff; }
-    .btn-primary:hover { background-color: #e68a00; }
-    .btn-secondary { background-color: #6c757d; color: #fff; }
-    .btn-action { background-color: #007bff; color: #fff; }
-    .btn-add { background-color: #28a745; color: #fff; padding: 6px 12px; width: auto; font-size: 12px; margin-top: 0; }
 
-    /* 商品詳細 */
-    .product-img {
-      width: 100%;
-      height: 180px;
-      background-color: #f0f0f0;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 64px;
-      margin-bottom: 16px;
+    .chat-button {
+
+        right: 15px;
+        bottom: 15px;
     }
-    .product-description {
-      background-color: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      color: #495057;
-      line-height: 1.5;
-    }
-    .quantity-control { display: flex; align-items: center; gap: 12px; margin: 10px 0 20px; }
-    .btn-qty { width: 36px; height: 36px; font-size: 18px; border: 1px solid #ccc; background: #fff; border-radius: 4px; padding: 0; }
 
-    /* カート画面 */
-    .cart-list { list-style: none; padding: 0; margin: 0 0 16px 0; border-bottom: 1px solid #eee; }
-    .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid #eee; font-size: 14px; }
-    .total-price { font-size: 18px; font-weight: bold; text-align: right; margin: 15px 0; }
+}
 
-    /* おすすめセクション */
-    .recommend-section {
-      border-top: 2px dashed #ddd;
-      margin: 20px -24px -24px -24px;
-      padding: 16px 24px 24px 24px;
-      background-color: #fafafa;
-      border-radius: 0 0 8px 8px;
-    }
-    .recommend-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 8px; }
-
-    /* 決済画面（アコーディオン） */
-    .pay-option { margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
-    .pay-btn { background-color: #f8f9fa; color: #333; text-align: left; margin: 0; border-radius: 0; }
-    .pay-btn:hover { background-color: #e9ecef; }
-    .pay-banner { display: none; padding: 15px; background-color: #f1f8ff; border-top: 1px solid #ddd; font-size: 13px; line-height: 1.6; }
-    .pay-banner label { display: block; margin-bottom: 5px; }
-
-    /* 最終確認画面 */
-    .confirm-box { background: #f8f9fa; border: 1px solid #e9ecef; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
-    .confirm-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-  </style>
+</style>
 </head>
+
+
 <body>
 
-<div class="card">
 
-  <!-- 【ページ1】商品詳細画面 -->
-  <div id="page-detail" class="page active">
-    <div class="product-img">📦</div>
-    <h1 style="font-size: 20px; margin: 0 0 8px;">サンプル商品 A</h1>
-    
-    <div class="product-description">
-      この商品は高品質な素材を使用して作られたこだわりのアイテムです。<br>
-      ・原産国: 日本 (Made in Japan)<br>
-      ・素材: 綿 100%
-    </div>
+<!-- =========================
+     チャットボタン
+========================= -->
 
-    <div style="font-size: 22px; font-weight: bold; color: #e44d26;">¥1,200</div>
-    <div style="font-size: 14px; color: #666; margin-bottom: 15px;">📦 在庫数: 10点</div>
+<button
+    class="chat-button"
+    onclick="toggleChat()"
+    aria-label="綾時屋サポートを開く">
 
-    <label style="font-size: 14px;">🔢 購入個数</label>
-    <div class="quantity-control">
-      <button class="btn-qty" onclick="changeQuantity(-1)">−</button>
-      <span id="qty-display" style="font-size: 18px; font-weight: bold; width: 30px; text-align: center;">1</span>
-      <button class="btn-qty" onclick="changeQuantity(1)">＋</button>
-    </div>
+    💬
 
-    <button class="btn-primary" onclick="addToCartAndShowAlert()">カートに追加する</button>
-    <button class="btn-action" onclick="showPage('page-cart')">🛒 カートを見る</button>
-  </div>
+</button>
 
 
-  <!-- 【ページ2】ショッピングカート画面 -->
-  <div id="page-cart" class="page">
-    <h2>🛒 ショッピングカート</h2>
-    <ul id="cart-list" class="cart-list"></ul>
-    
-    <div class="total-price">
-      合計金額: ¥<span id="cart-total">0</span>
-    </div>
+<!-- =========================
+     チャットウィンドウ
+========================= -->
 
-    <!-- 合計とおすすめの間に配置した「決済に進む」ボタン -->
-    <button class="btn-action" onclick="showPage('page-payment')">💳 決済に進む</button>
+<div
+    class="chat-window"
+    id="chatWindow">
 
-    <div class="recommend-section">
-      <h3 style="font-size: 15px; margin: 0 0 10px;">💡 あわせて買うといいおすすめ</h3>
-      <div class="recommend-item">
-        <div>
-          <strong>専用お手入れクロス</strong><br>
-          <span style="color: #e44d26;">¥500</span>
+
+    <!-- ヘッダー -->
+
+    <div class="chat-header">
+
+        <div class="chat-header-title">
+            綾時屋サポート
         </div>
-        <button class="btn-add" onclick="addRecommend('専用お手入れクロス', 500)">追加</button>
-      </div>
-      <div class="recommend-item">
-        <div>
-          <strong>保護スプレー 100ml</strong><br>
-          <span style="color: #e44d26;">¥850</span>
+
+        <button
+            class="chat-close"
+            onclick="toggleChat()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         メッセージ
+    ========================= -->
+
+    <div
+        class="chat-messages"
+        id="chatMessages">
+
+        <div class="message bot-message">
+
+            こんにちは！😊<br>
+
+            <b>綾時屋サポート</b>です。<br><br>
+
+            商品探しやご注文、
+            会員ランクなどについて
+            お手伝いします。<br><br>
+
+            下のボタンから
+            知りたいことを選んでください。
+
         </div>
-        <button class="btn-add" onclick="addRecommend('保護スプレー 100ml', 850)">追加</button>
-      </div>
+
     </div>
 
-    <button class="btn-secondary" onclick="showPage('page-detail')" style="margin-top: 20px;">商品ページに戻る</button>
-  </div>
+
+    <!-- =========================
+         よくある質問
+    ========================= -->
+
+    <div class="quick-buttons">
+
+        <button
+            onclick="quickQuestion('おすすめの商品を教えて')">
+
+            おすすめ商品
+
+        </button>
 
 
-  <!-- 【ページ3】決済画面 -->
-  <div id="page-payment" class="page">
-    <h2>💳 決済方法の選択</h2>
+        <button
+            onclick="quickQuestion('商品を探したい')">
 
-    <!-- クレジット -->
-    <div class="pay-option">
-      <button class="pay-btn" onclick="toggleBanner('banner-credit', 'クレジットカード')">💳 クレジットカード</button>
-      <div id="banner-credit" class="pay-banner">
-        <strong>ご登録クレジットカードの確認</strong><br>
-        カード番号: **** **** **** 1234<br>
-        有効期限: 12/28<br>
-        <span style="color: #28a745;">✔ このカードでお支払いを進めます</span>
-      </div>
+            商品を探す
+
+        </button>
+
+
+        <button
+            onclick="quickQuestion('送料はいくらですか')">
+
+            送料について
+
+        </button>
+
+
+        <button
+            onclick="quickQuestion('支払い方法を教えて')">
+
+            支払い方法
+
+        </button>
+
+
+        <button
+            onclick="quickQuestion('注文について知りたい')">
+
+            注文について
+
+        </button>
+
+
+        <button
+            onclick="quickQuestion('会員ランクの特典を教えて')">
+
+            会員ランク
+
+        </button>
+
+
+        <button
+            onclick="quickQuestion('綾町について知りたい')">
+
+            綾町について
+
+        </button>
+
     </div>
 
-    <!-- PayPay -->
-    <div class="pay-option">
-      <button class="pay-btn" onclick="toggleBanner('banner-paypay', 'PayPay')">📱 PayPay</button>
-      <div id="banner-paypay" class="pay-banner">
-        注文完了後、PayPayアプリ（または決済画面）へ自動で遷移します。
-      </div>
+
+    <!-- =========================
+         入力欄
+    ========================= -->
+
+    <div class="chat-input-area">
+
+        <input
+            type="text"
+            id="chatInput"
+            class="chat-input"
+            placeholder="質問を入力してください..."
+            onkeydown="handleKey(event)"
+        >
+
+        <button
+            class="send-button"
+            onclick="sendMessage()">
+
+            送信
+
+        </button>
+
     </div>
-
-    <!-- コンビニ -->
-    <div class="pay-option">
-      <button class="pay-btn" onclick="toggleBanner('banner-convenience', 'コンビニ決済')">🏪 コンビニ決済</button>
-      <div id="banner-convenience" class="pay-banner">
-        お支払いするコンビニを選択してください：<br><br>
-        <label><input type="radio" name="convenience-store" value="セブンイレブン" checked> セブンイレブン</label>
-        <label><input type="radio" name="convenience-store" value="ローソン"> ローソン</label>
-        <label><input type="radio" name="convenience-store" value="ファミリーマート"> ファミリーマート</label>
-      </div>
-    </div>
-
-    <!-- 代引き -->
-    <div class="pay-option">
-      <button class="pay-btn" onclick="toggleBanner('banner-cod', '代金引換')">🚚 代金引換（代引き）</button>
-      <div id="banner-cod" class="pay-banner">
-        商品受け取り時に配達員へ現金でお支払いください。<br>
-        ※別途代引き手数料（¥330）がかかります。
-      </div>
-    </div>
-
-    <button class="btn-action" onclick="goToConfirmPage()" style="margin-top: 20px;">最終確認に進む</button>
-    <button class="btn-secondary" onclick="showPage('page-cart')">カートに戻る</button>
-  </div>
-
-
-  <!-- 【ページ4】最終確認画面 -->
-  <div id="page-confirm" class="page">
-    <h2>📋 最終確認</h2>
-    
-    <div class="confirm-box">
-      <strong>注文商品一覧</strong>
-      <div id="confirm-items" style="margin-top: 8px;"></div>
-    </div>
-
-    <div class="confirm-box">
-      <div class="confirm-row">
-        <span>お支払い方法:</span>
-        <strong id="confirm-payment-method">-</strong>
-      </div>
-      <div id="confirm-convenience-row" class="confirm-row" style="display: none;">
-        <span>選択コンビニ:</span>
-        <strong id="confirm-convenience-store">-</strong>
-      </div>
-      <hr style="border: 0; border-top: 1px solid #ccc; margin: 8px 0;">
-      <div class="confirm-row" style="font-size: 16px;">
-        <span>最終お支払い合計:</span>
-        <strong style="color: #e44d26;">¥<span id="confirm-total">0</span></strong>
-      </div>
-    </div>
-
-    <button class="btn-primary" onclick="submitOrder()">購入を確定する</button>
-    <button class="btn-secondary" onclick="showPage('page-payment')">決済方法を選び直す</button>
-  </div>
 
 </div>
 
+
+
 <script>
-  let currentQty = 1;
-  let cart = [];
-  let selectedPaymentMethod = '';
 
-  // ページ切り替え
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-  }
 
-  // 個数変更
-  function changeQuantity(amount) {
-    if (currentQty + amount >= 1 && currentQty + amount <= 10) {
-      currentQty += amount;
-      document.getElementById('qty-display').textContent = currentQty;
-    }
-  }
+/* =========================
+   チャットを開閉
+========================= */
 
-  // 商品詳細からのカート追加
-  function addToCartAndShowAlert() {
-    const existing = cart.find(item => item.name === 'サンプル商品 A');
-    if (existing) {
-      existing.qty += currentQty;
+function toggleChat() {
+
+    const chat =
+        document.getElementById("chatWindow");
+
+
+    if (chat.style.display === "flex") {
+
+        chat.style.display = "none";
+
     } else {
-      cart.push({ name: 'サンプル商品 A', price: 1200, qty: currentQty });
-    }
-    renderCart();
-    alert('商品をカートに追加しました！');
-  }
 
-  // おすすめ商品のカート追加
-  function addRecommend(name, price) {
-    const existing = cart.find(item => item.name === name);
-    if (existing) {
-      existing.qty += 1;
-    } else {
-      cart.push({ name, price, qty: 1 });
-    }
-    renderCart();
-  }
+        chat.style.display = "flex";
 
-  // カート描画
-  function renderCart() {
-    const cartList = document.getElementById('cart-list');
-    const totalEl = document.getElementById('cart-total');
-    cartList.innerHTML = '';
-
-    if (cart.length === 0) {
-      cartList.innerHTML = '<li style="padding: 15px 0; text-align: center; color: #888;">カートは空です</li>';
-      totalEl.textContent = '0';
-      return;
     }
 
-    let total = 0;
-    cart.forEach(item => {
-      const subtotal = item.price * item.qty;
-      total += subtotal;
-      cartList.innerHTML += `
-        <li class="cart-item">
-          <span>${item.name} × ${item.qty}</span>
-          <span>¥${subtotal.toLocaleString()}</span>
-        </li>
-      `;
-    });
-    totalEl.textContent = total.toLocaleString();
-  }
+}
 
-  // 決済方法バナーの開閉（アコーディオン）
-  function toggleBanner(bannerId, methodName) {
-    document.querySelectorAll('.pay-banner').forEach(b => b.style.display = 'none');
-    document.getElementById(bannerId).style.display = 'block';
-    selectedPaymentMethod = methodName;
-  }
 
-  // 最終確認画面へ遷移
-  function goToConfirmPage() {
-    if (!selectedPaymentMethod) {
-      alert('お支払い方法を選択してください。');
-      return;
-    }
-    if (cart.length === 0) {
-      alert('カートに商品が入っていません。');
-      return;
-    }
+/* =========================
+   メッセージを追加
+========================= */
 
-    // 選択された内容のセット
-    const confirmItems = document.getElementById('confirm-items');
-    confirmItems.innerHTML = '';
-    let total = 0;
+function addMessage(text, type) {
 
-    cart.forEach(item => {
-      const subtotal = item.price * item.qty;
-      total += subtotal;
-      confirmItems.innerHTML += `
-        <div class="confirm-row">
-          <span>${item.name} × ${item.qty}</span>
-          <span>¥${subtotal.toLocaleString()}</span>
-        </div>
-      `;
-    });
+    const messages =
+        document.getElementById("chatMessages");
 
-    document.getElementById('confirm-payment-method').textContent = selectedPaymentMethod;
-    document.getElementById('confirm-total').textContent = total.toLocaleString();
 
-    // コンビニの表示切り替え
-    const cvsRow = document.getElementById('confirm-convenience-row');
-    if (selectedPaymentMethod === 'コンビニ決済') {
-      const selectedCvs = document.querySelector('input[name="convenience-store"]:checked').value;
-      document.getElementById('confirm-convenience-store').textContent = selectedCvs;
-      cvsRow.style.display = 'flex';
-    } else {
-      cvsRow.style.display = 'none';
+    const message =
+        document.createElement("div");
+
+
+    message.classList.add(
+        "message",
+        type === "user"
+        ? "user-message"
+        : "bot-message"
+    );
+
+
+    message.innerHTML = text;
+
+
+    messages.appendChild(message);
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* =========================
+   ユーザーが送信
+========================= */
+
+function sendMessage() {
+
+    const input =
+        document.getElementById("chatInput");
+
+
+    const text =
+        input.value.trim();
+
+
+    if (text === "") {
+
+        return;
+
     }
 
-    showPage('page-confirm');
-  }
 
-  // 購入確定処理
-  function submitOrder() {
-    alert('ご注文ありがとうございました！購入が確定しました。');
-    cart = [];
-    renderCart();
-    showPage('page-detail');
-  }
+    addMessage(text, "user");
 
-  // 初期化
-  renderCart();
+
+    input.value = "";
+
+
+    setTimeout(function() {
+
+        const answer =
+            getAnswer(text);
+
+
+        addMessage(answer, "bot");
+
+    }, 400);
+
+}
+
+
+/* =========================
+   ボタンから質問
+========================= */
+
+function quickQuestion(text) {
+
+    addMessage(text, "user");
+
+
+    setTimeout(function() {
+
+        const answer =
+            getAnswer(text);
+
+
+        addMessage(answer, "bot");
+
+    }, 400);
+
+}
+
+
+/* =========================
+   Enterキーで送信
+========================= */
+
+function handleKey(event) {
+
+    if (event.key === "Enter") {
+
+        sendMessage();
+
+    }
+
+}
+
+
+/* =========================
+   質問に対する回答
+========================= */
+
+function getAnswer(text) {
+
+    text = text.toLowerCase();
+
+
+    /* =========================
+       おすすめ商品
+    ========================= */
+
+    if (
+        text.includes("おすすめ") ||
+        text.includes("人気") ||
+        text.includes("好み")
+    ) {
+
+        return `
+        <b>おすすめの商品はこちらです😊</b><br><br>
+
+        🏺 綾の手仕事 陶器マグ<br>
+        🧵 手染めのストール<br>
+        🍵 職人の小皿<br><br>
+
+        綾時屋では、お客様の購入履歴や
+        好みに合わせて、おすすめの商品を
+        表示する機能を用意しています。
+        `;
+
+    }
+
+
+    /* =========================
+       商品検索
+    ========================= */
+
+    if (
+        text.includes("商品") &&
+        (
+            text.includes("探") ||
+            text.includes("検索")
+        )
+    ) {
+
+        return `
+        <b>商品を探すことができます🔎</b><br><br>
+
+        商品はジャンルから
+        探すことができます。<br><br>
+
+        🏺 陶器<br>
+        🧵 染物<br>
+        🍴 食品<br>
+        🎁 ギフト<br><br>
+
+        商品名から検索することもできます。
+        `;
+
+    }
+
+
+    /* =========================
+       送料
+    ========================= */
+
+    if (
+        text.includes("送料") ||
+        text.includes("配送")
+    ) {
+
+        return `
+        <b>送料について📦</b><br><br>
+
+        会員ランクによって
+        送料特典が異なります。<br><br>
+
+        🥉 ブロンズ：送料半額<br>
+        🥈 シルバー：送料無料<br>
+        🥇 ゴールド：送料無料<br>
+        💎 プラチナ：送料無料<br><br>
+
+        詳しい会員ランク特典は
+        「会員ランク」から確認できます。
+        `;
+
+    }
+
+
+    /* =========================
+       支払い
+    ========================= */
+
+    if (
+        text.includes("支払い") ||
+        text.includes("決済") ||
+        text.includes("クレジット") ||
+        text.includes("paypay")
+    ) {
+
+        return `
+        <b>お支払い方法💳</b><br><br>
+
+        以下のお支払い方法に
+        対応しています。<br><br>
+
+        ・クレジットカード<br>
+        ・代引き<br>
+        ・コンビニ払い<br>
+        ・PayPay<br><br>
+
+        注文時にお支払い方法を
+        選択してください。
+        `;
+
+    }
+
+
+    /* =========================
+       注文
+    ========================= */
+
+    if (
+        text.includes("注文") ||
+        text.includes("購入")
+    ) {
+
+        return `
+        <b>ご注文について🛒</b><br><br>
+
+        ① 商品を選択<br>
+        ② カートに入れる<br>
+        ③ お届け先を入力<br>
+        ④ 支払い方法を選択<br>
+        ⑤ 注文を確定<br><br>
+
+        注文完了後、
+        商品の発送準備を行います。
+        `;
+
+    }
+
+
+    /* =========================
+       会員ランク
+    ========================= */
+
+    if (
+        text.includes("会員") ||
+        text.includes("ランク") ||
+        text.includes("特典") ||
+        text.includes("ポイント") ||
+        text.includes("ブロンズ") ||
+        text.includes("シルバー") ||
+        text.includes("ゴールド") ||
+        text.includes("プラチナ")
+    ) {
+
+        return `
+        <b>綾時屋 会員ランク特典 ⭐</b><br><br>
+
+        🥉 <b>ブロンズ</b><br>
+        送料半額<br><br>
+
+        🥈 <b>シルバー</b><br>
+        送料無料<br><br>
+
+        🥇 <b>ゴールド</b><br>
+        送料無料 ＋ 5％OFF<br><br>
+
+        💎 <b>プラチナ</b><br>
+        送料無料 ＋ 10％OFF<br><br>
+
+        会員ランクが上がるほど、
+        お得な特典を受けられます😊
+        `;
+
+    }
+
+
+    /* =========================
+       ブロンズ
+    ========================= */
+
+    if (text.includes("ブロンズ")) {
+
+        return `
+        🥉 <b>ブロンズ会員</b><br><br>
+
+        特典：<br>
+        ・送料半額
+        `;
+
+    }
+
+
+    /* =========================
+       シルバー
+    ========================= */
+
+    if (text.includes("シルバー")) {
+
+        return `
+        🥈 <b>シルバー会員</b><br><br>
+
+        特典：<br>
+        ・送料無料
+        `;
+
+    }
+
+
+    /* =========================
+       ゴールド
+    ========================= */
+
+    if (text.includes("ゴールド")) {
+
+        return `
+        🥇 <b>ゴールド会員</b><br><br>
+
+        特典：<br>
+        ・送料無料<br>
+        ・5％OFF
+        `;
+
+    }
+
+
+    /* =========================
+       プラチナ
+    ========================= */
+
+    if (text.includes("プラチナ")) {
+
+        return `
+        💎 <b>プラチナ会員</b><br><br>
+
+        特典：<br>
+        ・送料無料<br>
+        ・10％OFF
+        `;
+
+    }
+
+
+    /* =========================
+       綾町について
+    ========================= */
+
+    if (
+        text.includes("綾町") ||
+        text.includes("観光") ||
+        text.includes("宮崎")
+    ) {
+
+        return `
+        <b>綾町について🌿</b><br><br>
+
+        綾町は宮崎県にある
+        自然豊かな地域です。<br><br>
+
+        綾町では陶器や染物など、
+        地域の素材や技術を活かした
+        ものづくりが行われています。<br><br>
+
+        綾時屋では、綾町の魅力を
+        商品と一緒に全国へ届けることを
+        目指しています。
+        `;
+
+    }
+
+
+    /* =========================
+       在庫
+    ========================= */
+
+    if (
+        text.includes("在庫") ||
+        text.includes("売り切れ")
+    ) {
+
+        return `
+        <b>在庫について📦</b><br><br>
+
+        商品ページから
+        現在の在庫状況を
+        確認できます。<br><br>
+
+        在庫が少ない商品については
+        「残りわずか」と表示します。
+        `;
+
+    }
+
+
+    /* =========================
+       その他
+    ========================= */
+
+    return `
+        ご質問ありがとうございます😊<br><br>
+
+        申し訳ありませんが、
+        その質問については
+        現在回答を用意していません。<br><br>
+
+        以下の項目について
+        質問してみてください。<br><br>
+
+        ・おすすめ商品<br>
+        ・商品を探したい<br>
+        ・送料<br>
+        ・支払い方法<br>
+        ・注文について<br>
+        ・会員ランク<br>
+        ・綾町について
+    `;
+
+}
+
 </script>
 
 </body>
 </html>
+
 
